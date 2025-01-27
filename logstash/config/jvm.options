@@ -1,0 +1,22 @@
+# JVM Heap Size
+-Xms1g
+-Xmx1g
+
+# GC (Garbage Collection) logging
+-XX:+UseG1GC
+-XX:InitiatingHeapOccupancyPercent=75
+-XX:+PrintGCDetails
+#-XX:+PrintGCDateStamps
+#-XX:+PrintGCApplicationStoppedTime
+#-XX:+PrintTenuringDistribution
+#-Xloggc:/usr/share/logstash/logs/gc.log
+
+# Locale settings
+-Duser.timezone=UTC
+-Dfile.encoding=UTF-8
+-Dsun.jnu.encoding=UTF-8
+
+# JVM optimizations
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath=/usr/share/logstash/logs
+

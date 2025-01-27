@@ -33,12 +33,16 @@ services:
     image: docker.elastic.co/logstash/logstash:8.17.1
     container_name: logstash
     volumes:
-      - ./logstash_pipeline:/usr/share/logstash/pipeline:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./logstash/config:/usr/share/logstash/config
         #- shared_logs:/shared_logs
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
     networks:
       - logstash_network
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
     ports:
       - "5044:5044"
       - "9600:9600"
@@ -49,9 +53,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
     container_name: elasticsearch
     environment:
-      - xpack.security.enabled=true
-      - ELASTIC_PASSWORD=your_secure_password
-      - xpack.security.http.ssl.enabled=false
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - discovery.type=single-node
     ulimits:
       memlock:
@@ -61,10 +63,16 @@ services:
     mem_limit: 4g
     volumes:
       - es_data:/usr/share/elasticsearch/data
+      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro        
     networks:
       - logstash_network
     ports:
       - "9200:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsSL -u elastic:${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   logstash_pipeline:
