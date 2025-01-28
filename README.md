@@ -13,5 +13,6 @@ It's good to check at this time to see if Logstash is picking up files from the 
 
 ##Elasticsearch##
 
-Check that the index exists: `curl -X GET "localhost:9200/_cat/indices?v"`
-Query data in the index: `curl -X GET "localhost:9200/logstash-*/_search?pretty"`
+Check that the index exists: `curl -X GET "localhost:9200/_cat/indices?v"`<br>
+Query data in the index: `curl -X GET "localhost:9200/logstash-*/_search?pretty"`<br>
+Get the count of log messages received by Elasticsearch: `curl -s -X GET "localhost:9200/_count" | jq`<br>
