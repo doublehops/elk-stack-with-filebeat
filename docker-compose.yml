@@ -64,6 +64,7 @@ services:
     volumes:
       - es_data:/usr/share/elasticsearch/data
       - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro        
+      - ./elasticsearch/create-certs.sh:/usr/share/elasticsearch/create-certs.sh:ro        
     networks:
       - logstash_network
     ports:
